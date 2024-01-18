@@ -1,6 +1,11 @@
 resource "null_resource" "app_deploy" {
     count      = local.INSTANCE_COUNT
-  provisioner "remote-exec" {
+  
+  triggers = {
+    always_run = timestamp()                                # This ensures your provisioner will be executing all the time
+  }
+    
+    provisioner "remote-exec" {
 
     # connection block establishes connection to this
     connection {
