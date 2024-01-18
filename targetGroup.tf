@@ -6,14 +6,14 @@ resource "aws_lb_target_group" "app" {
   protocol              = "HTTP"
   vpc_id                = data.terraform_remote_state.vpc.outputs.VPC_ID
 
-  health_check {
+health_check {
     path                = "/health"
-    enabled             = true 
+    enabled             = true
     interval            = 5
     timeout             = 4
     healthy_threshold   = 2
     unhealthy_threshold = 2
-  }     
+  }    
 }
 
 # Attached the instances to the targetGroup
