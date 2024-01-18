@@ -1,5 +1,4 @@
 # Creates Spot Instances
-
 resource "aws_spot_instance_request" "spot" {
 
     count                       = var.SPOT_INSTANCE_COUNT   
@@ -15,7 +14,6 @@ resource "aws_spot_instance_request" "spot" {
 }
 
 # Creates On Demand (OD) Instances
-
 resource "aws_instance" "od" {
 
     count                       = var.OD_INSTANCE_COUNT   
@@ -27,3 +25,10 @@ resource "aws_instance" "od" {
 
 }
 
+# Creating EC2 Tags
+resource "aws_ec2_tag" "app_tags" {
+  count                         = local.INSTANCE_COUNT
+  resource_id                   = element(local.INSTANCE_IDS, count.index)
+  key                           = "Name"
+  value                         = "${var.COMPONENT}-${var.ENV}"
+}
