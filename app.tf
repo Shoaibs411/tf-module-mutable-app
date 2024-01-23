@@ -17,7 +17,7 @@ resource "null_resource" "app_deploy" {
 
     inline = [
         "curl https://gitlab.com/thecloudcareers/opensource/-/raw/master/lab-tools/ansible/install.sh | sudo bash",
-        "ansible-pull -U https://github.com/Shoaibs411/ansible.git -e DOCDB_ENDPOINT=${data.terraform_remote_state.db.outputs.DOCDB_ENDPOINT} -e APP_VERSION=${var.APP_VERSION} -e ENV=${var.ENV} -e COMPONENT=${var.COMPONENT}  roboshop-pull.yml"
+        "ansible-pull -U https://github.com/Shoaibs411/ansible.git -e APP_VERSION=${var.APP_VERSION} -e ENV=${var.ENV} -e COMPONENT=${var.COMPONENT}  roboshop-pull.yml"
         ]
     }
 }
