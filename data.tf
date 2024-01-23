@@ -29,7 +29,7 @@ data "terraform_remote_state" "alb" {
 data "terraform_remote_state" "db" {
   backend = "s3"
   config = {
-    bucket  = "b56-terraform-state-bucket"
+    bucket  = "b56-terraform-state--bucket"
     key     = "${var.ENV}/dbs/terraform.tfstate"
     region  = "us-east-1"
   }
