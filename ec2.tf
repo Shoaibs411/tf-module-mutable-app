@@ -23,6 +23,9 @@ resource "aws_instance" "od" {
     vpc_security_group_ids      = [aws_security_group.allows_app.id]
     subnet_id                   = element(data.terraform_remote_state.vpc.outputs.PRIVATE_SUBNET_IDS, count.index) 
 
+  tags = {
+    Name                        = "${var.COMPONENT}-${var.ENV}"
+  }
 }
 
 # Creating EC2 Tags
