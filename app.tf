@@ -16,6 +16,7 @@ resource "null_resource" "app_deploy" {
     }
 
     inline = [
+        "wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem",
         "ansible-pull -U https://github.com/Shoaibs411/ansible.git -e DOCDB_ENDPOINT=${data.terraform_remote_state.db.outputs.DOCDB_ENDPOINT} -e APP_VERSION=${var.APP_VERSION} -e ENV=${var.ENV} -e COMPONENT=${var.COMPONENT}  roboshop-pull.yml"
         ]
     }
