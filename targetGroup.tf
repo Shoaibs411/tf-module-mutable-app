@@ -1,50 +1,50 @@
 # Creates Targert Group
 
 resource "aws_lb_target_group" "app" {
-  name                  = "${var.COMPONENT}-${var.ENV}-tg"
-  port                  = var.APP_PORT
-  protocol              = "HTTP"
-  vpc_id                = data.terraform_remote_state.vpc.outputs.VPC_ID
+  name                    = "${var.COMPONENT}-${var.ENV}-tg"
+  port                    = var.APP_PORT
+  protocol                = "HTTP"
+  vpc_id                  = data.terraform_remote_state.vpc.outputs.VPC_ID
 
 health_check {
-    path                = "/health"
-    enabled             = true
-    interval            = 5
-    timeout             = 4
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
+    path                  = "/health"
+    enabled               = true
+    interval              = 5
+    timeout               = 4
+    healthy_threshold     = 2
+    unhealthy_threshold   = 2
   }    
 }
 
 # Attached the instances to the targetGroup
 resource "aws_lb_target_group_attachment" "attach_instances" {
 
-  count                 = local.INSTANCE_COUNT
-  target_group_arn      = aws_lb_target_group.app.arn
-  target_id             = element(local.INSTANCE_IDS, count.index)
-  port                  = var.APP_PORT
+  count                   = local.INSTANCE_COUNT
+  target_group_arn        = aws_lb_target_group.app.arn
+  target_id               = element(local.INSTANCE_IDS, count.index)
+  port                    = var.APP_PORT
 }
 
 # Generates a Random Number
 resource "random_integer" "priority" {
-  min = 100
-  max = 500
+  min                     = 100
+  max                     = 500
 }
 
 # Private Listener Rule 
 resource "aws_lb_listener_rule" "app_rule" {
-  count        = var.INTERNAL ? 1 : 0
-  listener_arn = data.terraform_remote_state.alb.outputs.PRIVATE_LISTENER_ARN
-  priority     = random_integer.priority.result
+  count                   = var.INTERNAL ? 1 : 0
+  listener_arn            = data.terraform_remote_state.alb.outputs.PRIVATE_LISTENER_ARN
+  priority                = random_integer.priority.result
 
   action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.app.arn
+    type                  = "forward"
+    target_group_arn      = aws_lb_target_group.app.arn
   }
 
   condition {
     host_header {
-      values = ["${var.COMPONENT}-${var.ENV}.${data.terraform_remote_state.vpc.outputs.PRIVATE_HOSTED_ZONE_NAME}"]
+      values              = ["${var.COMPONENT}-${var.ENV}.${data.terraform_remote_state.vpc.outputs.PRIVATE_HOSTED_ZONE_NAME}"]
     }
   }
 
